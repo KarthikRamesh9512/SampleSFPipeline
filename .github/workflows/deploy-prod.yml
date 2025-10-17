@@ -13,8 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SFDX
-        uses: sfdx-actions/setup-sfdx@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install SFDX CLI
+        run: npm install -g sfdx-cli@latest
 
       - name: Authenticate to Final Org
         env:
@@ -23,8 +28,9 @@ jobs:
           SFDX_USERNAME: ${{ secrets.SF_USERNAME_PROD }}
           SFDX_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_PROD }}
         run: |
-          echo "$SFDX_JWT_KEY" > assets/server.key
-          sfdx auth:jwt:grant --clientid $SFDX_CLIENT_ID --jwtkeyfile assets/server.key --username $SFDX_USERNAME --instanceurl $SFDX_INSTANCE_URL
+          echo "$SFDX_JWT_KEY" > jwt.key
+          sfdx auth:jwt:grant --clientid $SFDX_CLIENT_ID --jwtkeyfile jwt.key --username $SFDX_USERNAME --instanceurl $SFDX_INSTANCE_URL
+          sfdx force:org:display -u $SFDX_USERNAME
 
       - name: Deploy to Production
         run: sfdx force:source:deploy -u ${{ secrets.SF_USERNAME_PROD }} -p force-app/main/default -w 10
