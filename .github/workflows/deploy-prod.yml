@@ -29,8 +29,8 @@ jobs:
           SF_ORG_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_PROD }}
         run: |
           echo "$SF_JWT_KEY" > jwt.key
-          sf org login jwt --client-id $SF_CLIENT_ID --jwt-key-file jwt.key --username $SF_USERNAME --instance-url $SF_ORG_INSTANCE_URL
-          sf org display --target-org $SF_USERNAME
+          sf org login jwt --client-id "$SF_CLIENT_ID" --jwt-key-file jwt.key --username "$SF_USERNAME" --instance-url "$SF_ORG_INSTANCE_URL"
+          sf org display --target-org "$SF_USERNAME"
 
       - name: Deploy to Production
         run: sf project deploy start --target-org ${{ secrets.SF_USERNAME_PROD }} --source-dir force-app/main/default --wait 10
