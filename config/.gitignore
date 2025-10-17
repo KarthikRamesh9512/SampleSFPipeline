@@ -1,0 +1,12 @@
+# Salesforce CLI
+.sfdx/
+.sf/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code and local
+.vscode/
+node_modules/
+*.log
