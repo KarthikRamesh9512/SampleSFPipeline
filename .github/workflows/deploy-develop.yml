@@ -14,8 +14,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install SFDX CLI
-        run: npm install -g sfdx-cli@latest
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli@latest
 
       - name: Authenticate (JWT)
         env:
