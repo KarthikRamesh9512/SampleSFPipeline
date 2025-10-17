@@ -1,4 +1,4 @@
-name: Deploy to Production (main)
+name: Deploy to DevHub (Production)
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli@latest
 
-      - name: Authenticate to Final Org
+      - name: Authenticate to DevHub
         env:
           SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_PROD }}
           SF_JWT_KEY: ${{ secrets.SF_JWT_KEY_PROD }}
@@ -32,5 +32,5 @@ jobs:
           sf org login jwt --client-id "$SF_CLIENT_ID" --jwt-key-file jwt.key --username "$SF_USERNAME" --instance-url "$SF_INSTANCE_URL"
           sf org display --target-org "$SF_USERNAME"
 
-      - name: Deploy to Production
+      - name: Deploy to DevHub
         run: sf project deploy start --target-org ${{ secrets.SF_USERNAME_PROD }} --source-dir force-app/main/default --wait 10

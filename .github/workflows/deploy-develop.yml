@@ -1,4 +1,4 @@
-name: Deploy to ScratchOrg2 (develop)
+name: Deploy to ScratchOrg3 (develop)
 on:
   push:
     branches: [ develop ]
@@ -17,7 +17,7 @@ jobs:
       - name: Install Salesforce CLI
         run: npm install -g @salesforce/cli@latest
 
-      - name: Authenticate (JWT)
+      - name: Authenticate to DevHub
         env:
           SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_ORG2 }}
           SF_JWT_KEY: ${{ secrets.SF_JWT_KEY_ORG2 }}
@@ -25,8 +25,12 @@ jobs:
           SF_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_ORG2 }}
         run: |
           echo "$SF_JWT_KEY" > jwt.key
-          sf org login jwt --client-id "$SF_CLIENT_ID" --jwt-key-file jwt.key --username "$SF_USERNAME" --instance-url "$SF_INSTANCE_URL"
+          sf org login jwt --client-id "$SF_CLIENT_ID" --jwt-key-file jwt.key --username "$SF_USERNAME" --instance-url "$SF_INSTANCE_URL" --set-default-dev-hub
           sf org display --target-org "$SF_USERNAME"
 
-      - name: Deploy to Org2
-        run: sf project deploy start --target-org ${{ secrets.SF_USERNAME_ORG2 }} --source-dir force-app/main/default --wait 10
+      - name: Deploy to Scratch Org 3
+        env:
+          SCRATCH_ORG_USERNAME: ${{ secrets.SCRATCH_ORG3_USERNAME }}
+        run: |
+          sf org display --target-org "$SCRATCH_ORG_USERNAME"
+          sf project deploy start --target-org "$SCRATCH_ORG_USERNAME" --source-dir force-app/main/default --wait 10
