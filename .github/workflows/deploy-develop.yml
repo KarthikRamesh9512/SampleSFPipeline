@@ -19,14 +19,14 @@ jobs:
 
       - name: Authenticate (JWT)
         env:
-          SFDX_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_ORG2 }}
-          SFDX_JWT_KEY: ${{ secrets.SF_JWT_KEY_ORG2 }}
-          SFDX_USERNAME: ${{ secrets.SF_USERNAME_ORG2 }}
-          SFDX_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_ORG2 }}
+          SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_ORG2 }}
+          SF_JWT_KEY: ${{ secrets.SF_JWT_KEY_ORG2 }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME_ORG2 }}
+          SF_ORG_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_ORG2 }}
         run: |
-          echo "$SFDX_JWT_KEY" > jwt.key
-          sfdx auth:jwt:grant --clientid $SFDX_CLIENT_ID --jwtkeyfile jwt.key --username $SFDX_USERNAME --instanceurl $SFDX_INSTANCE_URL
-          sfdx force:org:display -u $SFDX_USERNAME
+          echo "$SF_JWT_KEY" > jwt.key
+          sf org login jwt --client-id $SF_CLIENT_ID --jwt-key-file jwt.key --username $SF_USERNAME --instance-url $SF_ORG_INSTANCE_URL
+          sf org display --target-org $SF_USERNAME
 
       - name: Deploy to Org2
-        run: sfdx force:source:deploy -u ${{ secrets.SF_USERNAME_ORG2 }} -p force-app/main/default -w 10
+        run: sf project deploy start --target-org ${{ secrets.SF_USERNAME_ORG2 }} --source-dir force-app/main/default --wait 10
