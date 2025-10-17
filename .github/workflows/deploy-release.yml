@@ -1,0 +1,29 @@
+name: Deploy to ScratchOrg3 (release)
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SFDX
+        uses: sfdx-actions/setup-sfdx@v3
+
+      - name: Authenticate to Org3
+        env:
+          SFDX_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_ORG3 }}
+          SFDX_JWT_KEY: ${{ secrets.SF_JWT_KEY_ORG3 }}
+          SFDX_USERNAME: ${{ secrets.SF_USERNAME_ORG3 }}
+          SFDX_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_ORG3 }}
+        run: |
+          echo "$SFDX_JWT_KEY" > assets/server.key
+          sfdx auth:jwt:grant --clientid $SFDX_CLIENT_ID --jwtkeyfile assets/server.key --username $SFDX_USERNAME --instanceurl $SFDX_INSTANCE_URL
+
+      - name: Deploy to Org3
+        run: sfdx force:source:deploy -u ${{ secrets.SF_USERNAME_ORG3 }} -p force-app/main/default -w 10

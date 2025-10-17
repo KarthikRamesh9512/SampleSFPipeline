@@ -1,0 +1,35 @@
+name: Deploy to ScratchOrg2 (develop)
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Salesforce CLI
+        uses: sfdx-actions/setup-sfdx@v3
+        with:
+          sfdx-version: latest
+
+      - name: Authenticate to Org2 (JWT)
+        env:
+          SFDX_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_ORG2 }}
+          SFDX_JWT_KEY: ${{ secrets.SF_JWT_KEY_ORG2 }}
+          SFDX_USERNAME: ${{ secrets.SF_USERNAME_ORG2 }}
+          SFDX_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_ORG2 }}
+        run: |
+          echo "$SFDX_JWT_KEY" > assets/server.key
+          sfdx auth:jwt:grant --clientid $SFDX_CLIENT_ID --jwtkeyfile assets/server.key --username $SFDX_USERNAME --instanceurl $SFDX_INSTANCE_URL
+
+      - name: Deploy source to Org2
+        run: sfdx force:source:deploy -u ${{ secrets.SF_USERNAME_ORG2 }} -p force-app/main/default -w 10
+
+      - name: Run Apex tests
+        run: sfdx force:apex:test:run -u ${{ secrets.SF_USERNAME_ORG2 }} --resultformat human --wait 10
