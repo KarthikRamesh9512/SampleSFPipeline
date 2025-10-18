@@ -19,14 +19,11 @@ jobs:
 
       - name: Authenticate to DevHub
         env:
-          SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_ORG2 }}
-          SF_JWT_KEY: ${{ secrets.SF_JWT_KEY_ORG2 }}
           SF_USERNAME: ${{ secrets.SF_USERNAME_ORG2 }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD_ORG2 }}
           SF_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_ORG2 }}
         run: |
-          echo "$SF_JWT_KEY" > jwt.key
-          sf org login jwt --client-id "$SF_CLIENT_ID" --jwt-key-file jwt.key --username "$SF_USERNAME" --instance-url "$SF_INSTANCE_URL" --set-default-dev-hub
-          sf org display --target-org "$SF_USERNAME"
+          echo "$SF_PASSWORD" | sf org login web --username "$SF_USERNAME" --instance-url "$SF_INSTANCE_URL" --set-default-dev-hub
 
       - name: Deploy to Scratch Org 3
         env:
