@@ -1,4 +1,4 @@
-name: Deploy to ScratchOrg3 (develop) - UPDATED
+name: Deploy to DevHub (develop)
 on:
   push:
     branches: [ develop ]
@@ -24,9 +24,7 @@ jobs:
           echo "$SFDX_AUTH_URL" > authfile.txt
           sf org login sfdx-url --sfdx-url-file authfile.txt --set-default-dev-hub --alias devhub
 
-      - name: Deploy to Scratch Org 3
-        env:
-          SCRATCH_ORG_USERNAME: ${{ secrets.SCRATCH_ORG3_USERNAME }}
+      - name: Deploy to DevHub
         run: |
-          sf org display --target-org "$SCRATCH_ORG_USERNAME"
-          sf project deploy start --target-org "$SCRATCH_ORG_USERNAME" --source-dir force-app/main/default --wait 10
+          sf org display --target-org devhub
+          sf project deploy start --target-org devhub --source-dir force-app/main/default --wait 10
