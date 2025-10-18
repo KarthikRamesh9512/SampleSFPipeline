@@ -1,4 +1,4 @@
-name: Deploy to ScratchOrg3 (develop)
+name: Deploy to ScratchOrg3 (develop) - UPDATED
 on:
   push:
     branches: [ develop ]
