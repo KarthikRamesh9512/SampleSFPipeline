@@ -23,7 +23,7 @@ jobs:
 
       - name: Authenticate to DevHub
         env:
-          SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID_PROD }}
+          SF_CLIENT_ID: ${{ secrets.RELEASE_ORG }}
           SF_JWT_KEY: ${{ secrets.SF_JWT_KEY_PROD }}
           SF_USERNAME: ${{ secrets.SF_USERNAME_PROD }}
           SF_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL_PROD }}
